@@ -31,4 +31,5 @@ class TestTestappModels(TestCase):
 
         m.delete()
         with self.assertRaises(exceptions.ObjectDoesNotExist):
-            m3 = Message.objects.get(pk=m_pk)  # assertRaises
+            m3 = Message.objects.get(pk=m_pk)
+            m3
