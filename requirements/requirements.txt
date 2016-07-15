@@ -1,0 +1,5 @@
+
+# app requirements
+django
+
+-r requirements-dev.txt

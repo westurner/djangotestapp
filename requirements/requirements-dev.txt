@@ -1,0 +1,7 @@
+
+# appdev requirements
+django-debug-toolbar
+django-extensions
+Werkzeug
+
+-r requirements-test.txt
