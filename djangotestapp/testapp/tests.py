@@ -16,18 +16,18 @@ from djangotestapp.testapp.models import Message
 
 class TestTestappModels(TestCase):
     def test_Message_0(self):
-        testdata = dict(user='abc', message='xyz')
+        testdata = dict(user='abc', articleBody='xyz')
         m = Message(**testdata)
         self.assertTrue(isinstance(m, Message))
         self.assertEqual(m.user, testdata['user'])
-        self.assertEqual(m.message, testdata['message'])
+        self.assertEqual(m.articleBody, testdata['articleBody'])
 
         m.save()
         m_pk = m.pk
         m2 = Message.objects.get(pk=m_pk)
         self.assertTrue(isinstance(m2, Message))
         self.assertEqual(m2.user, testdata['user'])
-        self.assertEqual(m2.message, testdata['message'])
+        self.assertEqual(m2.articleBody, testdata['articleBody'])
 
         m.delete()
         with self.assertRaises(exceptions.ObjectDoesNotExist):
