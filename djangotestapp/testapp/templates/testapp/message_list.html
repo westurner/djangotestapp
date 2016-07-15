@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+  {% for object in object_list %}
+    <div class="card">
+      <div class="card-block">
+        <p class="card-text">
+          <div class="articleBody" style="margin-bottom: 0">{{ object.articleBody_html|safe }}</div>
+          <span class="user">{{ object.user }}</span>
+          <br>
+          <span class="dateCreated">{{ object.dateCreated }}</span>
+        </p>
+      </div>
+    </div>
+  {% endfor %}
+{% endblock content %}

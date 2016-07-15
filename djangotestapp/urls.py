@@ -19,6 +19,7 @@ from django.contrib import admin
 import testapp.views
 
 urlpatterns = [
+    url(r'^$', testapp.views.MessageListView.as_view(), {'title': 'testapp'}, name='message_list_view'),
+    url(r'^test/simple', testapp.views.simple_view, name='simple_view'),
     url(r'^admin/', admin.site.urls),
-    url(r'$', testapp.views.simple_view, name='simple_view'),
 ]
