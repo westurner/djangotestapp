@@ -20,5 +20,5 @@ import testapp.views
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'$', testapp.views.simple_view),
+    url(r'$', testapp.views.simple_view, name='simple_view'),
 ]

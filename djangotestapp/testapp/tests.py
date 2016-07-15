@@ -1,11 +1,19 @@
 
+from django.core.urlresolvers import reverse
 from django.test import Client, TestCase
+
+
+class TestTestappRootView(TestCase):
+    def test_root_view(self):
+        c = Client()
+        r = c.get('/')
+        self.assertContains(r, '<h1>')
 
 
 class TestTestappSimpleViews(TestCase):
     def test_simple_view(self):
         c = Client()
-        r = c.get('/')
+        r = c.get(reverse('simple_view'))
         self.assertContains(r, 'simple view')
         self.assertHTMLEqual(r.content, '<h1>simple view</h1>')
 
