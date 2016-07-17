@@ -21,6 +21,15 @@ testdata2['articleBody_html'] = "@to <a class='hashtag' href='/tag/hashtag'>#has
 testdata2['usertags'] = []
 LINKIFY_TESTDATA.append(testdata2)
 
+LINKIFY_TESTDATA.append({
+    'user': 'abc',
+    'articleBody': '@to #hashtag #hashtag2 message',
+    'articleBody_html': "<a class='usertag' href='/@to'>@to</a> <a class='hashtag' href='/tag/hashtag'>#hashtag</a> <a class='hashtag' href='/tag/hashtag2'>#hashtag2</a> message",
+    'hashtags': ['hashtag', 'hashtag2'],
+    'usertags': ['to'],
+    }
+)
+
 
 class TestUtils(unittest.TestCase):
     def test_linkify_text(self):
@@ -72,8 +81,6 @@ class TestTestappModels(TestCase):
         self.assertEqual(hashtag2.name, testdata['name'])
         self.assertEqual(hashtag, hashtag2)
 
-
-
     def test_Message_0(self):
         testdata_ = LINKIFY_TESTDATA[1]
         testdata = testdata_.copy()
@@ -108,8 +115,14 @@ class TestTestappModels(TestCase):
         with self.assertRaises(exceptions.ObjectDoesNotExist):
             Message.objects.get(pk=m_pk)
 
-    def test_Message_1(self):
-        testdata_ = LINKIFY_TESTDATA[0]
+    def test_Message_1__one_hashtag(self):
+        self.messageTestA(LINKIFY_TESTDATA[0])
+
+    def test_Message_1__two_hashtags(self):
+        self.messageTestA(LINKIFY_TESTDATA[2])
+
+    def messageTestA(self, _testdata_):
+        testdata_ = _testdata_
         testdata = testdata_.copy()
         testdata.pop('articleBody_html')
         testdata.pop('hashtags')

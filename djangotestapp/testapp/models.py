@@ -1,7 +1,9 @@
 from __future__ import unicode_literals
 
+import itertools
+
 from django.conf import settings
-from django.contrib.auth import get_user_model
+# from django.contrib.auth import get_user_model
 from django.db import models
 
 from .utils import linkify_text
@@ -30,11 +32,27 @@ class Message(models.Model):
         computed = linkify_text(self.articleBody)
         self.articleBody_html = computed['html']
         super(Message, self).save(*args, **kwargs)
-        for hashtag in computed['hashtags']:
-            ht, created = Hashtag.objects.get_or_create(name=hashtag)
-            self.hashtags.add(ht)
+
+        # PRF: minimize get_or_create queries
+        if len(computed['hashtags']) == 1:
+            hashtag, created = Hashtag.objects.get_or_create(
+                name=computed['hashtags'][0])
+            self.hashtags.add(hashtag)
+        elif len(computed['hashtags']) > 1:
+            existing_hashtags = Hashtag.objects.filter(name__in=computed['hashtags'])
+            new_hashtag_names = set.difference(set(computed['hashtags']), set(t.name for t in existing_hashtags))
+            new_hashtags = []
+            for hashtag_name in new_hashtag_names:
+                # get_or_create here because otherwise
+                # there could be a race condition
+                # where a different query has already created the given hashtag
+                hashtag, created = Hashtag.objects.get_or_create(name=hashtag_name)
+                new_hashtags.append(hashtag)
+            self.hashtags.add(*itertools.chain(existing_hashtags, new_hashtags))
+
         users_by_name = computed['users_by_name']
         if users_by_name is not None:
+            # TODO: PRF: filter(name__in=computed['users_by_name'].keys()) and create others
             for usertag, user in computed['users_by_name'].items():
                 self.users.add(user)
         return super(Message, self).save(*args, **kwargs)
