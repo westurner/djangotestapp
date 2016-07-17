@@ -1,5 +1,6 @@
 
 # app requirements
 django
+pytz
 
 -r requirements-dev.txt
