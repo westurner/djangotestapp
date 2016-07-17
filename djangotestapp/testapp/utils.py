@@ -19,9 +19,9 @@ from functools import partial
 
 from django.contrib.auth import get_user_model
 
-RGX_HASHTAG = r'(#)(\w+)'
-RGX_USERTAG = r'(@)(\w+)'
-RGX_TAGS = r'(#|@)(\w+)'
+RGX_HASHTAG = r'\B(#)([\w\d]+)'
+RGX_USERTAG = r'\B(@)([\w\d]+)'
+RGX_TAGS = r'\B(#|@)([\w\d]+)'
 
 
 def tag_replfunc(mobj, hashtags=None, usertags=None, users_by_name=None):
