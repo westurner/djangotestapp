@@ -3,6 +3,7 @@
 
 # Create your views here.
 
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse
 from django.views.generic import ListView
@@ -20,9 +21,13 @@ class MessageListView(ListView):
     model = Message
 
 
-class MessageCreateView(CreateView):
+class MessageCreateView(LoginRequiredMixin, CreateView):
     model = Message
     fields = ['articleBody']
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user.username
+        return super(MessageCreateView, self).form_valid(form)
 
 
 class MessageDetailView(DetailView):

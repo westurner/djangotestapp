@@ -212,3 +212,26 @@ class TestGenericViews(TestCase):
         # TODO follow redirect, assert /@admin
         resp = c.get('/me', follow=True)
         self.assertEqual(resp.redirect_chain[0][0], '/@admin')
+
+    def test_new(self):
+        testdata = LINKIFY_TESTDATA[1].copy()
+        testdata['password'] = 'password'
+        User = get_user_model()
+        user = User(username=testdata['user'])
+        user.set_password(testdata['password'])
+        user.save()
+
+        c = Client()
+        c.login(username=user.username, password=testdata['password'])
+        resp = c.get('/new')
+        self.assertContains(resp, '''<input type="submit" value="Post" />''')
+
+        resp = c.post('/new', data=dict(articleBody=testdata['articleBody']),
+                      follow=True)
+        self.assertContains(resp, testdata['articleBody_html'])
+
+    def test_new_notloggedin(self):
+        c = Client()
+        resp = c.get('/new', follow=True)
+        self.assertEqual('/accounts/login/?next=/new',
+                         resp.redirect_chain[0][0])
