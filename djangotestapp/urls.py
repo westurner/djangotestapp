@@ -21,5 +21,11 @@ import testapp.views
 urlpatterns = [
     url(r'^$', testapp.views.MessageListView.as_view(), {'title': 'testapp'}, name='message_list_view'),
     url(r'^test/simple', testapp.views.simple_view, name='simple_view'),
+    url(r'^new', testapp.views.MessageCreateView.as_view(), name='message_create_view'),
+    url(r'^@(?P<username>[\w\d]+)/(?P<pk>\d+)', testapp.views.MessageDetailView.as_view(), name='message_detail_view'),
+    url(r'^me', testapp.views.MeRedirectView.as_view(), name='me_redirect_view'),
+    url(r'^@(?P<username>[\w\d]+)', testapp.views.MessageUserListView.as_view(), name='message_user_list_view'),
+    url(r'^tag/(?P<hashtag>[\w\d]+)', testapp.views.HashtagListView.as_view(), name='hashtag_list_view'),
+    url(r'^@/(?P<username>[\w\d]+)/tag/(?P<hashtag>[\w\d]+)', testapp.views.MessageUserHashtagListView.as_view(), name='message_user_hashtag_list_view'),
     url(r'^admin/', admin.site.urls),
 ]

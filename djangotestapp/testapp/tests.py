@@ -141,6 +141,12 @@ class TestTestappModels(TestCase):
         m.save()
         m_pk = m.pk
 
+        m_url = m.get_absolute_url()
+        self.assertEqual(m_url, '/@{}/{}'.format(testdata['user'], m_pk))
+
+        m_user_url = m.get_user_absolute_url()
+        self.assertEqual(m_user_url, '/@{}'.format(testdata['user']))
+
         _hashtags = []
         for hashtag in testdata_['hashtags']:
             _hashtag = Hashtag.objects.filter(name=hashtag)
@@ -169,3 +175,40 @@ class TestTestappModels(TestCase):
         m.delete()
         with self.assertRaises(exceptions.ObjectDoesNotExist):
             Message.objects.get(pk=m_pk)
+
+
+class TestGenericViews(TestCase):
+    def test_urls(self):
+        c = Client()
+        c.get('/')
+        c.get(reverse('message_list_view'))
+
+        c.get('/@admin')
+        c.get(reverse('message_user_list_view', kwargs=dict(username='admin')))
+
+        c.get('/@admin/1')
+        c.get(reverse('message_detail_view', kwargs=dict(username='admin', pk='1')))
+
+        c.get('/@admin/tag/hashtag')
+        c.get(reverse('message_user_hashtag_list_view', kwargs=dict(username='admin', hashtag='hashtag')))  # TODO
+
+        c.get('/tag/hashtag')
+        c.get(reverse('hashtag_list_view', kwargs=dict(hashtag='hashtag')))
+
+    # def test_me_redirect_notloggedin(self):
+    #     c = Client()
+    #   resp = c.get('/me', follow=True)
+    #   self.assertEqual(resp.redirect_chain[0][0], '/login')
+
+    def test_me_redirect_loggedin(self):
+        testdata = dict(username='admin', password='password')
+        User = get_user_model()
+        u = User(username=testdata['username'], is_active=True)
+        u.set_password(testdata['password'])
+        u.save()
+
+        c = Client()
+        c.login(username=u.username, password=testdata['password'])
+        # TODO follow redirect, assert /@admin
+        resp = c.get('/me', follow=True)
+        self.assertEqual(resp.redirect_chain[0][0], '/@admin')

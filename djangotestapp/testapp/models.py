@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 import itertools
 
 from django.conf import settings
+from django.core.urlresolvers import reverse
 # from django.contrib.auth import get_user_model
 from django.db import models
 
@@ -52,10 +53,16 @@ class Message(models.Model):
 
         users_by_name = computed['users_by_name']
         if users_by_name is not None:
-            # TODO: PRF: filter(name__in=computed['users_by_name'].keys()) and create others
-            for usertag, user in computed['users_by_name'].items():
-                self.users.add(user)
+            self.users.add(*users_by_name.values())
         return super(Message, self).save(*args, **kwargs)
 
     def __str__(self):
         return self.articleBody
+
+    def get_absolute_url(self):
+        return reverse('message_detail_view',
+                       kwargs=dict(username=str(self.user), pk=str(self.id)))
+
+    def get_user_absolute_url(self):
+        return reverse('message_user_list_view',
+                       kwargs=dict(username=self.user))

@@ -5,10 +5,17 @@
     <div class="card">
       <div class="card-block">
         <p class="card-text">
-          <div class="articleBody" style="margin-bottom: 0">{{ object.articleBody_html|safe }}</div>
-          <span class="user">{{ object.user }}</span>
-          <br>
-          <span class="dateCreated">{{ object.dateCreated }}</span>
+          <blockquote class="blockquote"> <!-- TODO p > blockquote -->
+            <div class="articleBody" style="margin-bottom: 0">{{ object.articleBody_html|safe }}</div>
+            <footer class="blockquote-footer">
+              <a href="{{ object.get_user_absolute_url }}">
+                <span class="user">{{ object.user }}</span>
+              </a>
+              (<a href="{{ object.get_absolute_url }}">
+                <span class="dateCreated">{{ object.dateCreated }}</span>
+              </a>)
+            </footer>
+          </blockquote>
         </p>
       </div>
     </div>

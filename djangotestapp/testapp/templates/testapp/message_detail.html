@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="card">
+    <div class="card-block">
+    <p class="card-text">
+        <div class="articleBody" style="margin-bottom: 0">{{ object.articleBody_html|safe }}</div>
+        <span class="user">{{ object.user }}</span>
+        <br>
+        <a href="{{ object.get_absolute_url }}">
+          <span class="dateCreated">{{ object.dateCreated }}</span>
+        </a>
+    </p>
+    </div>
+</div>
+{% endblock content %}
