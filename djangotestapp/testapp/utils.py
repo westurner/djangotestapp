@@ -4,11 +4,6 @@ Utilities for linkifying #hashtags and @usertags in a string
 
 :Author: @westurner
 
-.. note::
-
-    - There are a number of calls to ``.lower()`` here:
-
-        - # TODO: User.username_preferred (capitalization)
 """
 import cgi
 import re
