@@ -240,3 +240,7 @@ class TestGenericViews(TestCase):
         self.assertEqual('/accounts/login/?next=/new',
                          resp.redirect_chain[0][0])
 
+class TestAppconfig(unittest.TestCase):
+    def test_appconfig(self):
+        from djangotestapp.testapp.apps import TestappConfig
+        self.assertEqual(TestappConfig.name, 'testapp')
