@@ -1,4 +1,8 @@
 
+"""
+djangotestapp.testapp.tests
+"""
+
 import unittest
 
 from django.contrib.auth import get_user_model
@@ -235,3 +239,4 @@ class TestGenericViews(TestCase):
         resp = c.get('/new', follow=True)
         self.assertEqual('/accounts/login/?next=/new',
                          resp.redirect_chain[0][0])
+
