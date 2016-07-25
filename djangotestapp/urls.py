@@ -20,5 +20,5 @@ urlpatterns = [
     url(r'', include('djangotestapp.testapp.urls')),
     url(r'^auth-api/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^auth/', include('rest_framework_social_oauth2.urls')),
-    url(r'^admin/', admin.site.urls),
+    url(r'^_admin_/', admin.site.urls),
 ]
