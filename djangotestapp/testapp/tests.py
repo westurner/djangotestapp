@@ -244,3 +244,208 @@ class TestAppconfig(unittest.TestCase):
     def test_appconfig(self):
         from djangotestapp.testapp.apps import TestappConfig
         self.assertEqual(TestappConfig.name, 'testapp')
+
+
+
+import pprint
+from rest_framework.test import APITestCase, force_authenticate
+
+
+class JSONAPITestCase(APITestCase):
+    def assertJSONLenAndEqual(self, resp1, resp2):
+        try:
+            resp1_json = resp1.json()
+        except AssertionError:
+            print(resp1.__dict__)
+            raise
+        try:
+            resp2_json = resp2.json()
+        except AssertionError:
+            print(resp2.__dict__)
+            raise
+        self.assertTrue(len(resp2.json()))
+        self.assertTrue(len(resp1.json()))
+        try:
+            self.assertEqual(resp1_json, resp2_json)
+        except AssertionError:
+            import json
+            str1 = json.dumps(resp1_json, indent=2)
+            str2 = json.dumps(resp2_json, indent=2)
+            import difflib
+            for n in difflib.unified_diff(str1.splitlines(), str2.splitlines()):
+                print(n)
+            raise
+        return resp1_json, resp2_json
+
+
+class APITestCase_(JSONAPITestCase):
+    fixtures = ['djangotestapp/fixtures/dump.json']
+
+    def debug_response(self, resp):
+        print(pprint.pformat(resp.__dict__))
+        req = resp.renderer_context['request'].__dict__
+        print(pprint.pformat(req))
+        print(pprint.pformat(req['_user']))
+
+    def assertHTTPCode(self, code, resp):
+        # 200 OK
+        # 201 Added
+        # 401 Unauthorized
+        # 405 Method not Allowed
+        try:
+            self.assertEqual(resp.status_code, code)
+        except AssertionError:
+            self.debug_response(resp)
+            raise
+
+    def loginAsAdmin(self):
+        # DEFAULT_PASSWORD = 'password'
+        # self.admin.set_password(DEFAULT_PASSWORD)
+        # self.client.login(username=self.admin.username,
+        #                   password=DEFAULT_PASSWORD)
+        self.client.force_authenticate(user=self.admin)
+
+    def setUp(self):
+        self.User = get_user_model()
+        DEFAULT_ADMIN_USERNAME = 'admin'
+        self.admin = self.User.objects.get(
+            username=DEFAULT_ADMIN_USERNAME)
+        if hasattr(self, 'setUp_'):
+            self.setUp_()
+        return super(APITestCase, self).setUp()
+
+
+class TestAPI_Messages(APITestCase_):
+
+    def setUp_(self):
+        self.testdata = {
+            'articleBody': 'example #message @user',
+            'user': self.admin.username}
+
+    def test_messages_get(self):
+        c = self.client
+        resp1 = c.get(reverse('message-list'))
+        resp2 = c.get('/api/v1/messages/')
+        self.assertJSONLenAndEqual(resp1, resp2)
+
+        resp1 = c.get(reverse('message-detail', kwargs=dict(
+            pk=1, format='json')))
+        resp2 = c.get('/api/v1/messages/1.json')
+        self.assertJSONLenAndEqual(resp1, resp2)
+
+    def test_messages_post_unauthorized(self):
+        c = self.client
+        testdata = self.testdata
+        resp1 = c.post(reverse('message-list'), testdata)
+        self.assertHTTPCode(401, resp1)
+
+    def test_messages_post_0(self):
+        c = self.client
+        testdata = self.testdata
+        self.loginAsAdmin()
+        resp1 = c.post(reverse('message-list', kwargs=dict(format='json')), testdata)
+        resp2 = c.post('/api/v1/messages.json', testdata)
+        self.assertHTTPCode(405, resp1)
+        self.assertHTTPCode(405, resp2)
+
+
+class TestAPI_MyMessages(APITestCase_): # TODO
+
+    def setUp_(self):
+        self.testdata = {
+            'articleBody': 'example #mymessage @user',
+            'user': self.admin.username}
+
+    def test_mymessages_get(self):
+        c = self.client
+        self.loginAsAdmin()
+        resp1 = c.get(reverse('mymessage-list'))
+        resp2 = c.get('/api/v1/mymessages/')
+        self.assertJSONLenAndEqual(resp1, resp2)
+
+        resp1 = c.get(reverse('mymessage-detail', kwargs=dict(
+            pk=1, format='json')))
+        resp2 = c.get('/api/v1/mymessages/1.json')
+        self.assertJSONLenAndEqual(resp1, resp2)
+
+    def test_mymessages_post_unauthorized(self):
+        c = self.client
+        testdata = self.testdata
+        resp1 = c.post(reverse('mymessage-list'), testdata)
+        self.assertHTTPCode(401, resp1)
+
+    def test_mymessages_post_0(self):
+        c = self.client
+        testdata = self.testdata
+        self.loginAsAdmin()
+        resp1 = c.post(reverse('mymessage-list', kwargs=dict(format='json')), testdata)
+        resp2 = c.post('/api/v1/mymessages.json', testdata)
+        self.assertHTTPCode(201, resp1)
+        self.assertHTTPCode(201, resp2)
+
+        id1 = resp1.json()['id']
+        resp11 = c.get(reverse('mymessage-detail', kwargs=dict(pk=id1, format='json')))
+        self.assertHTTPCode(200, resp11)
+        self.assertJSONLenAndEqual(resp1, resp11)
+        id2 = resp2.json()['id']
+        resp22 = c.get(reverse('mymessage-detail', kwargs=dict(pk=id2, format='json')))
+        self.assertHTTPCode(200, resp22)
+        self.assertJSONLenAndEqual(resp2, resp22)
+
+
+class TestAPI_Hashtags(APITestCase_):
+
+    def setUp_(self):
+        self.testdata = {'name': 'testtest'}
+
+    def test_hashtags_get(self):
+        c = self.client
+        resp1 = c.get(reverse('hashtag-list'))
+        resp2 = c.get('/api/v1/hashtags/')
+        self.assertJSONLenAndEqual(resp1, resp2)
+
+        resp1 = c.get(reverse('hashtag-detail', kwargs=dict(name='hashtag', format='json')))
+        resp2 = c.get('/api/v1/hashtags/hashtag.json')
+        self.assertJSONLenAndEqual(resp1, resp2)
+
+    def test_hashtags_post_unauthorized(self):
+        c = self.client
+        testdata = self.testdata
+        resp1 = c.post(reverse('hashtag-list'), testdata)
+        self.assertHTTPCode(401, resp1)
+
+    def test_hashtags_post_0__readonly(self):
+        c = self.client
+        testdata = self.testdata
+        self.loginAsAdmin()
+        resp1 = c.post(reverse('hashtag-list'), testdata)
+        self.assertHTTPCode(405, resp1)
+
+
+class TestAPI_Users(APITestCase_):
+
+    def setUp_(self):
+        self.testdata = {'username': 'testusername', }
+
+    def test_users_get(self):
+        c = self.client
+        resp1 = c.get(reverse('user-list'))
+        resp2 = c.get('/api/v1/users/')
+        self.assertJSONLenAndEqual(resp1, resp2)
+
+        resp1 = c.get(reverse('user-detail', kwargs=dict(pk=1, format='json')))
+        resp2 = c.get('/api/v1/users/1.json')
+        self.assertJSONLenAndEqual(resp1, resp2)
+
+    def test_users_post_unauthorized(self):
+        c = self.client
+        testdata = self.testdata
+        resp1 = c.post(reverse('user-list'), testdata)
+        self.assertHTTPCode(401, resp1)
+
+    def test_users_post_0__readonly(self):
+        c = self.client
+        testdata = self.testdata
+        self.loginAsAdmin()
+        resp1 = c.post(reverse('user-list'), testdata)
+        self.assertHTTPCode(405, resp1)

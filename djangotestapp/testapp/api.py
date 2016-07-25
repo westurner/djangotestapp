@@ -14,18 +14,21 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = User
         fields = (
+            'id',
             'url',
             'username',)
-        extra_kwargs = {
-            'url': {'lookup_field': 'username'},
-        }
+        ## Don't set lookup_field here because usernames can change
+        # extra_kwargs = {
+        #     'url': {'lookup_field': 'username'},
+        # }
 
 
-class UserViewSet(viewsets.ModelViewSet):
-    queryset = User.objects.all()
+class UserViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = User.objects.all()  # TODO SEC
     serializer_class = UserSerializer
-    lookup_field = 'username'
-    lookup_url_kwarg = 'username'
+    ## Don't set lookup_field here because usernames can change
+    # lookup_field = 'username'
+    # lookup_url_kwarg = 'username'
 
 
 class HashtagSerializer(serializers.HyperlinkedModelSerializer):
@@ -47,14 +50,14 @@ class HashtagViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class MessageSerializer(serializers.HyperlinkedModelSerializer):
-    users = UserSerializer(many=True)
-    # serializers.HyperlinkedRelatedField(many=True, view_name='user-detail', read_only=True)
-    hashtags = HashtagSerializer(many=True)
-    # serializers.HyperlinkedRelatedField(many=True, view_name='hashtag-detail', read_only=True)
+    users = UserSerializer(many=True, read_only=True)
+    hashtags = HashtagSerializer(many=True, read_only=True)
     class Meta:
         model = models.Message
         depth = 1
         fields = (
+            'id',
+            'url',
             'user',
             'articleBody',
             'articleBody_html',
@@ -77,11 +80,40 @@ class MessageSerializer(serializers.HyperlinkedModelSerializer):
         )
 
 
-class MessageViewSet(viewsets.ModelViewSet):
-    queryset = models.Message.objects.all()
+class MessageViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = models.Message.objects.all()  # TODO SEC
     serializer_class = MessageSerializer
+
+
+class CurrentUserDefault__Username(object):
+    def set_context(self, serializer_field):
+        self.user = serializer_field.context['request'].user
+
+    def __call__(self):
+        return self.user.username
+
+    def __repr__(self):
+        return unicode_to_repr('%s()' % self.__class__.__name__)
+
+
+class MyMessageSerializer(MessageSerializer):
+    user = serializers.HiddenField(
+        default=CurrentUserDefault__Username())  # TODO
+
+
+class MyMessageViewSet(viewsets.ModelViewSet):
+    serializer_class = MyMessageSerializer
+
+    def get_queryset(self):
+        user = self.request.user
+        if not user.is_authenticated():
+            return models.Message.objects.none()
+        return models.Message.objects.filter(user=user.username)
+        # return Message.objects.filter(user__username=user.username) # TODO
+
 
 router = routers.DefaultRouter()
 router.register(r'users', UserViewSet)
 router.register(r'hashtags', HashtagViewSet)
 router.register(r'messages', MessageViewSet)
+router.register(r'mymessages', MyMessageViewSet, 'mymessage')

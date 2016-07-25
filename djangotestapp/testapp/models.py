@@ -58,7 +58,10 @@ class Message(models.Model):
         users_by_name = computed['users_by_name']
         if users_by_name is not None:
             self.users.add(*users_by_name.values())
-        return super(Message, self).save(*args, **kwargs)
+        # kwargs['force_insert'] = False
+        # kwargs['force_update'] = True
+        # # kwargs['update_fields'] = ['hashtags', 'users'] # m2m
+        # return super(Message, self).save(*args, **kwargs)
 
     def __str__(self):
         return self.articleBody
