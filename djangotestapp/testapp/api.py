@@ -92,8 +92,9 @@ class CurrentUserDefault__Username(object):
     def __call__(self):
         return self.user.username
 
-    def __repr__(self):
-        return unicode_to_repr('%s()' % self.__class__.__name__)
+    # CLN: coverage
+    # def __repr__(self):
+    #     return unicode_to_repr('%s()' % self.__class__.__name__)
 
 
 class MyMessageSerializer(MessageSerializer):
