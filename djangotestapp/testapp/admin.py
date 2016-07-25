@@ -9,3 +9,4 @@ class MessageAdmin(admin.ModelAdmin):
     fields = ('articleBody', 'user',
               'dateCreated', 'likeCount', 'hashtags', 'users', 'articleBody_html')
     readonly_fields = ('dateCreated', 'likeCount', 'hashtags', 'users', 'articleBody_html')
+    list_display = ('articleBody', 'user', 'dateCreated')
