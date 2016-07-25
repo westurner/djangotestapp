@@ -7,6 +7,7 @@ djangotestapp
 
 
 .. contents::
+   :depth: 10
 
 Apps
 -----
