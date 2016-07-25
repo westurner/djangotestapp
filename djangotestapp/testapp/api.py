@@ -3,7 +3,7 @@
 djangotestapp.testapp.api
 """
 from django.contrib.auth import get_user_model
-from rest_framework import routers, serializers, viewsets
+from rest_framework import routers, serializers, viewsets, fields
 
 from djangotestapp.testapp import models
 
@@ -50,6 +50,7 @@ class HashtagViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class MessageSerializer(serializers.HyperlinkedModelSerializer):
+    user = UserSerializer(read_only=True)
     users = UserSerializer(many=True, read_only=True)
     hashtags = HashtagSerializer(many=True, read_only=True)
     class Meta:
@@ -85,21 +86,9 @@ class MessageViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = MessageSerializer
 
 
-class CurrentUserDefault__Username(object):
-    def set_context(self, serializer_field):
-        self.user = serializer_field.context['request'].user
-
-    def __call__(self):
-        return self.user.username
-
-    # CLN: coverage
-    # def __repr__(self):
-    #     return unicode_to_repr('%s()' % self.__class__.__name__)
-
-
 class MyMessageSerializer(MessageSerializer):
-    user = serializers.HiddenField(
-        default=CurrentUserDefault__Username())  # TODO
+    user = serializers.HiddenField(  # TODO: TST HiddenField?
+        default=fields.CurrentUserDefault())
 
 
 class MyMessageViewSet(viewsets.ModelViewSet):
@@ -109,8 +98,7 @@ class MyMessageViewSet(viewsets.ModelViewSet):
         user = self.request.user
         if not user.is_authenticated():
             return models.Message.objects.none()
-        return models.Message.objects.filter(user=user.username)
-        # return Message.objects.filter(user__username=user.username) # TODO
+        return models.Message.objects.filter(user__username=user.username)
 
 
 router = routers.DefaultRouter()

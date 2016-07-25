@@ -3,7 +3,9 @@
 
 # Create your views here.
 
+from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse
 from django.views.generic import ListView
@@ -26,7 +28,14 @@ class MessageCreateView(LoginRequiredMixin, CreateView):
     fields = ['articleBody']
 
     def form_valid(self, form):
-        form.instance.user = self.request.user.username
+        User = get_user_model()
+        try:
+            user = User.objects.filter(
+                username=self.request.user.username,
+                is_active=True).first()
+            form.instance.user = user
+        except ObjectDoesNotExist:
+            form.add_error("User must be a valid user")
         return super(MessageCreateView, self).form_valid(form)
 
 
@@ -55,7 +64,7 @@ class MessageUserListView(ListView):
         return context
 
     def get_queryset(self):
-        return Message.objects.filter(user=self.kwargs['username'])
+        return Message.objects.filter(user__username=self.kwargs['username'])
 
 
 class HashtagListView(ListView):
@@ -80,4 +89,6 @@ class MessageUserHashtagListView(ListView):
         return context
 
     def get_queryset(self):
-        return Message.objects.filter(user=self.kwargs['username'])  # TODO: filter by hashtag
+        return Message.objects.filter(user__username=self.kwargs['username'],
+                                      hashtags__name=self.kwargs['hashtag'])
+        # TODO: TST

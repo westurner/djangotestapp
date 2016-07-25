@@ -647,10 +647,28 @@
     },
     {
         "fields": {
+            "date_joined": "2016-07-25T19:46:25.901Z",
+            "email": "",
+            "first_name": "",
+            "groups": [],
+            "is_active": true,
+            "is_staff": false,
+            "is_superuser": false,
+            "last_login": null,
+            "last_name": "",
+            "password": "",
+            "user_permissions": [],
+            "username": "westurner"
+        },
+        "model": "auth.user",
+        "pk": 3
+    },
+    {
+        "fields": {
             "articleBody": "@to @username #hashtag message @username3 #hashtag2 #hashtag3 #hashtag4",
             "articleBody_html": "<a class='usertag' href='/@to'>@to</a> @username <a class='hashtag' href='/tag/hashtag'>#hashtag</a> message @username3 <a class='hashtag' href='/tag/hashtag2'>#hashtag2</a> <a class='hashtag' href='/tag/hashtag3'>#hashtag3</a> <a class='hashtag' href='/tag/hashtag4'>#hashtag4</a>",
             "dateCreated": "2016-07-17T05:09:50.356Z",
-            "dateModified": "2016-07-17T06:38:34.239Z",
+            "dateModified": "2016-07-25T19:46:25.898Z",
             "hashtags": [
                 1,
                 2,
@@ -658,7 +676,7 @@
                 4
             ],
             "likeCount": 0,
-            "user": "admin",
+            "user": 1,
             "users": [
                 2
             ]
@@ -671,10 +689,10 @@
             "articleBody": "example!",
             "articleBody_html": "example!",
             "dateCreated": "2016-07-17T10:17:05.385Z",
-            "dateModified": "2016-07-17T11:39:17.085Z",
+            "dateModified": "2016-07-25T19:46:25.904Z",
             "hashtags": [],
             "likeCount": 0,
-            "user": "westurner",
+            "user": 3,
             "users": []
         },
         "model": "testapp.message",
@@ -685,10 +703,10 @@
             "articleBody": "example!",
             "articleBody_html": "example!",
             "dateCreated": "2016-07-17T10:20:01.918Z",
-            "dateModified": "2016-07-17T11:39:06.146Z",
+            "dateModified": "2016-07-25T19:46:25.908Z",
             "hashtags": [],
             "likeCount": 0,
-            "user": "westurner",
+            "user": 3,
             "users": []
         },
         "model": "testapp.message",
@@ -699,12 +717,12 @@
             "articleBody": "example! @admin #admin",
             "articleBody_html": "example! <a class='usertag' href='/@admin'>@admin</a> <a class='hashtag' href='/tag/admin'>#admin</a>",
             "dateCreated": "2016-07-17T10:21:15.038Z",
-            "dateModified": "2016-07-17T10:25:13.304Z",
+            "dateModified": "2016-07-25T19:46:25.910Z",
             "hashtags": [
                 5
             ],
             "likeCount": 0,
-            "user": "admin",
+            "user": 1,
             "users": [
                 1
             ]
@@ -717,12 +735,12 @@
             "articleBody": "cool #message @admin",
             "articleBody_html": "cool <a class='hashtag' href='/tag/message'>#message</a> <a class='usertag' href='/@admin'>@admin</a>",
             "dateCreated": "2016-07-18T04:24:50.826Z",
-            "dateModified": "2016-07-18T04:24:51.267Z",
+            "dateModified": "2016-07-25T19:46:25.912Z",
             "hashtags": [
                 6
             ],
             "likeCount": 0,
-            "user": "",
+            "user": 2,
             "users": [
                 1
             ]
@@ -735,12 +753,12 @@
             "articleBody": "cool #message @admin",
             "articleBody_html": "cool <a class='hashtag' href='/tag/message'>#message</a> <a class='usertag' href='/@admin'>@admin</a>",
             "dateCreated": "2016-07-18T04:28:39.335Z",
-            "dateModified": "2016-07-18T04:28:39.335Z",
+            "dateModified": "2016-07-25T19:46:25.915Z",
             "hashtags": [
                 6
             ],
             "likeCount": 0,
-            "user": "admin",
+            "user": 1,
             "users": [
                 1
             ]
@@ -753,12 +771,12 @@
             "articleBody": "cool #message @admin",
             "articleBody_html": "cool <a class='hashtag' href='/tag/message'>#message</a> <a class='usertag' href='/@admin'>@admin</a>",
             "dateCreated": "2016-07-18T04:28:59.311Z",
-            "dateModified": "2016-07-18T04:28:59.614Z",
+            "dateModified": "2016-07-25T19:46:25.918Z",
             "hashtags": [
                 6
             ],
             "likeCount": 0,
-            "user": "admin",
+            "user": 1,
             "users": [
                 1
             ]

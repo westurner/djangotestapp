@@ -23,15 +23,16 @@ class Hashtag(models.Model):
 
 
 class Message(models.Model):
-    # user = models.ForeignKey(settings.AUTH_USER_MODEL, default=current_user)
-    user = models.TextField(db_index=True, max_length=42)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, db_index=True,
+                             related_name='messages')
     articleBody = models.TextField(db_index=True, max_length=140)
     articleBody_html = models.TextField(db_index=False, null=True, blank=True)
     dateCreated = models.DateTimeField(auto_now_add=True)
     dateModified = models.DateTimeField(auto_now=True)
     likeCount = models.IntegerField(default=0)
     hashtags = models.ManyToManyField(Hashtag, blank=True)
-    users = models.ManyToManyField(settings.AUTH_USER_MODEL, blank=True)
+    users = models.ManyToManyField(settings.AUTH_USER_MODEL, blank=True,
+                                   related_name='mentions')
 
     def save(self, *args, **kwargs):
         computed = linkify_text(self.articleBody)
@@ -68,8 +69,9 @@ class Message(models.Model):
 
     def get_absolute_url(self):
         return reverse('message_detail_view',
-                       kwargs=dict(username=str(self.user), pk=str(self.id)))
+                       kwargs=dict(username=str(self.user.username),
+                                   pk=str(self.id)))
 
     def get_user_absolute_url(self):
         return reverse('message_user_list_view',
-                       kwargs=dict(username=self.user))
+                       kwargs=dict(username=self.user.username))

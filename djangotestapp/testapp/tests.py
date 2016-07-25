@@ -74,6 +74,15 @@ from djangotestapp.testapp.models import Hashtag, Message
 
 class TestTestappModels(TestCase):
 
+    def create_testdata_user(self, testdata):
+        # REF: this could just be a minimal fixture
+        User = get_user_model()
+        user, created = User.objects.get_or_create(
+            username=testdata['user'], is_active=True)
+        user.save()
+        testdata['user'] = user
+        return user
+
     def test_Hashtag_0(self):
         testdata = {'name': 'test'}
         hashtag = Hashtag(name=testdata['name'])
@@ -91,6 +100,8 @@ class TestTestappModels(TestCase):
         testdata.pop('articleBody_html')
         testdata.pop('hashtags')
         testdata.pop('usertags')
+        self.create_testdata_user(testdata)
+
         m = Message(**testdata)
         self.assertTrue(isinstance(m, Message))
         self.assertEqual(m.user, testdata['user'])
@@ -120,9 +131,11 @@ class TestTestappModels(TestCase):
             Message.objects.get(pk=m_pk)
 
     def test_Message_1__one_hashtag(self):
+        self.create_testdata_user({'user': 'to'})
         self.messageTestA(LINKIFY_TESTDATA[0])
 
     def test_Message_1__two_hashtags(self):
+        self.create_testdata_user({'user': 'to'})
         self.messageTestA(LINKIFY_TESTDATA[2])
 
     def messageTestA(self, _testdata_):
@@ -131,10 +144,8 @@ class TestTestappModels(TestCase):
         testdata.pop('articleBody_html')
         testdata.pop('hashtags')
         testdata.pop('usertags')
+        u = self.create_testdata_user(testdata)
 
-        User = get_user_model()
-        u = User(username='to')
-        u.save()
         self.assertTrue(u.pk)
 
         m = Message(**testdata)
@@ -160,11 +171,11 @@ class TestTestappModels(TestCase):
             set(_hashtags),
             set(m.hashtags.all()))
 
+        User = get_user_model()
         _users = []
         for username in testdata_['usertags']:
-            _user = User.objects.filter(username=username)
-            self.assertEqual(len(_user), 1)
-            _users.extend(x for x in _user)
+            _user = User.objects.get(username=username)
+            _users.append(_user)
         self.assertEqual(
             set(_users),
             set(m.users.all()))
