@@ -240,15 +240,15 @@ class TestGenericViews(TestCase):
         self.assertEqual('/accounts/login/?next=/new',
                          resp.redirect_chain[0][0])
 
+
 class TestAppconfig(unittest.TestCase):
     def test_appconfig(self):
         from djangotestapp.testapp.apps import TestappConfig
         self.assertEqual(TestappConfig.name, 'testapp')
 
 
-
 import pprint
-from rest_framework.test import APITestCase, force_authenticate
+from rest_framework.test import APITestCase
 
 
 class JSONAPITestCase(APITestCase):
@@ -336,7 +336,6 @@ class TestAPITestCase_(APITestCase_): #
             self.assertJSONLenAndEqual(resp1, resp3)
         with self.assertRaises(ValueError):
             self.assertJSONLenAndEqual(resp3, resp1)
-
 
 
 class TestAPI_Messages(APITestCase_):
