@@ -30,5 +30,5 @@ migrate:
 	python ./manage.py migrate -v3
 
 dumpdata:
-	python ./manage.py dumpdata --all | python -mjson.tool > \
-		djangotestapp/fixtures/dump.json
+	python ./manage.py dumpdata --all \
+		| python -mjson.tool > djangotestapp/fixtures/dump.json
