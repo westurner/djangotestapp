@@ -9,6 +9,18 @@ djangotestapp
 .. contents::
    :depth: 10
 
+Usage
+-------
+
+.. code:: bash
+
+   git clone ssh://git@github.com/westurner/djangotestapp
+   cd djangotestapp
+   make install test
+   make setupdev migrate serve
+   # username/password: admin/password
+
+
 Apps
 -----
 
