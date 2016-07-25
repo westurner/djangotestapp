@@ -2,7 +2,7 @@
 default: test
 
 test:
-	python ./manage.py test
+	python ./manage.py test -d
 
 coverage:
 	@# pip install coverage
