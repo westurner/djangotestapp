@@ -20,6 +20,9 @@ Usage
    make setupdev migrate serve
    # username/password: admin/password
 
+-  http://localhost:8000/
+-  http://localhost:8000/_admin_/
+
 
 Apps
 -----
