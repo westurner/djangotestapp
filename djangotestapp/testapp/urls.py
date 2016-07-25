@@ -13,9 +13,10 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
-from django.conf.urls import url
+from django.conf.urls import include, url
 
 import djangotestapp.testapp.views as views
+import djangotestapp.testapp.api as api
 
 urlpatterns = [
     url(r'^$', views.MessageListView.as_view(), {'title': 'testapp'}, name='message_list_view'),
@@ -26,4 +27,6 @@ urlpatterns = [
     url(r'^@(?P<username>[\w\d]+)', views.MessageUserListView.as_view(), name='message_user_list_view'),
     url(r'^tag/(?P<hashtag>[\w\d]+)', views.HashtagListView.as_view(), name='hashtag_list_view'),
     url(r'^@/(?P<username>[\w\d]+)/tag/(?P<hashtag>[\w\d]+)', views.MessageUserHashtagListView.as_view(), name='message_user_hashtag_list_view'),
+
+    url(r'^api/v1/', include(api.router.urls)),
 ]
