@@ -14,3 +14,6 @@ serve:
 
 install:
 	pip install -r requirements/requirements-all.txt
+
+migrate:
+	python ./manage.py migrate -v3
