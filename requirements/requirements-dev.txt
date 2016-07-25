@@ -4,4 +4,10 @@ django-debug-toolbar
 django-extensions
 Werkzeug
 
+requests
+requests-oauthlib
+#httpie
+#httpie-oauth # OAuth1
+curlish
+
 -r requirements-test.txt
