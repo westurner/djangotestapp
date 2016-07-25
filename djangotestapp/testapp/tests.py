@@ -228,6 +228,12 @@ class TestGenericViews(TestCase):
         resp = c.get('/me', follow=True)
         self.assertEqual(resp.redirect_chain[0][0], '/@admin')
 
+    def test_new_notloggedin(self):
+        c = Client()
+        resp = c.get('/new', follow=True)
+        self.assertEqual('/accounts/login/?next=/new',
+                         resp.redirect_chain[0][0])
+
     def test_new(self):
         testdata = LINKIFY_TESTDATA[1].copy()
         testdata['password'] = 'password'
@@ -244,12 +250,6 @@ class TestGenericViews(TestCase):
         resp = c.post('/new', data=dict(articleBody=testdata['articleBody']),
                       follow=True)
         self.assertContains(resp, testdata['articleBody_html'])
-
-    def test_new_notloggedin(self):
-        c = Client()
-        resp = c.get('/new', follow=True)
-        self.assertEqual('/accounts/login/?next=/new',
-                         resp.redirect_chain[0][0])
 
 
 class TestAppconfig(unittest.TestCase):
