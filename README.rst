@@ -78,6 +78,32 @@ curlish
 - Curl + OAuth2
 
 
+``~/.ftcurlish.json``:
+
+.. code:: json
+
+    {
+      "curl_path": "curl", 
+      "http_port": 62231, 
+      "json_indent": 2, 
+      "sites": {
+        "dt": {
+          "extra_headers": {}, 
+          "request_token_params": {}, 
+          "authorize_url": "http://localhost:8000/auth/token", 
+          "base_url": "http://localhost:8000/", 
+          "client_id": "4nDF3xY0z8kUdLGxj4hiSMIbRWo9WqTiidC9oTKM", 
+          "client_secret": "ufywDcTi8dNit8gfVfk0zaxy2SUj0gY3i0NNx37X6ZzGQqp6NOUxGCWz5ACIoM9HUsxyxsLbsiPezE0VqpotoYwfSDcRPlfnamq3nT2q27JUZiSgRCLtdDAC1XbS0LDN", 
+          "grant_type": "password", 
+          "access_token_url": "/auth/token"
+        }
+      } 
+    }
+
+- Get ``client_id``, ``client_secret`` from:
+  http://localhost:8000/admin/oauth2_provider/application/add/
+
+
 Contributors
 --------------
 - `@westurner <https://github.com/westurner>`_
