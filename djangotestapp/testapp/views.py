@@ -28,14 +28,7 @@ class MessageCreateView(LoginRequiredMixin, CreateView):
     fields = ['articleBody']
 
     def form_valid(self, form):
-        User = get_user_model()
-        try:
-            user = User.objects.filter(
-                username=self.request.user.username,
-                is_active=True).first()
-            form.instance.user = user
-        except ObjectDoesNotExist:
-            form.add_error("User must be a valid user")
+        form.instance.user = self.request.user
         return super(MessageCreateView, self).form_valid(form)
 
 
