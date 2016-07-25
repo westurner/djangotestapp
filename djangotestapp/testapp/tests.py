@@ -255,25 +255,28 @@ class JSONAPITestCase(APITestCase):
     def assertJSONLenAndEqual(self, resp1, resp2):
         try:
             resp1_json = resp1.json()
-        except AssertionError:
-            print(resp1.__dict__)
+        except ValueError as e:
+            output = repr(resp1.__dict__)
+            e.args = (u"%s\n%s" % (e.args[0], output),)
             raise
         try:
             resp2_json = resp2.json()
-        except AssertionError:
-            print(resp2.__dict__)
+        except ValueError as e:
+            output = repr(resp2.__dict__)
+            e.args = (u"%s\n%s" % (e.args[0], output),)
             raise
         self.assertTrue(len(resp2.json()))
         self.assertTrue(len(resp1.json()))
         try:
             self.assertEqual(resp1_json, resp2_json)
-        except AssertionError:
+        except AssertionError as e:
             import json
             str1 = json.dumps(resp1_json, indent=2)
             str2 = json.dumps(resp2_json, indent=2)
             import difflib
-            for n in difflib.unified_diff(str1.splitlines(), str2.splitlines()):
-                print(n)
+            output = u'\n'.join(
+                difflib.unified_diff(str1.splitlines(), str2.splitlines()))
+            e.args = (u"%s\n%s" % (e.args[0], output),)
             raise
         return resp1_json, resp2_json
 
@@ -281,11 +284,15 @@ class JSONAPITestCase(APITestCase):
 class APITestCase_(JSONAPITestCase):
     fixtures = ['djangotestapp/fixtures/dump.json']
 
+    longMessage = True
+
     def debug_response(self, resp):
-        print(pprint.pformat(resp.__dict__))
+        output = []
+        output.append(pprint.pformat(resp.__dict__))
         req = resp.renderer_context['request'].__dict__
-        print(pprint.pformat(req))
-        print(pprint.pformat(req['_user']))
+        output.append(pprint.pformat(req))
+        output.append(pprint.pformat(req['_user']))
+        return u'\n'.join(output)
 
     def assertHTTPCode(self, code, resp):
         # 200 OK
@@ -294,8 +301,8 @@ class APITestCase_(JSONAPITestCase):
         # 405 Method not Allowed
         try:
             self.assertEqual(resp.status_code, code)
-        except AssertionError:
-            self.debug_response(resp)
+        except AssertionError as e:
+            e.args = (u"%s\n%s" % (e.args[0], self.debug_response(resp)),)
             raise
 
     def loginAsAdmin(self):
@@ -313,6 +320,23 @@ class APITestCase_(JSONAPITestCase):
         if hasattr(self, 'setUp_'):
             self.setUp_()
         return super(APITestCase, self).setUp()
+
+
+class TestAPITestCase_(APITestCase_): #
+    def test_asserts_fail(self):
+        c = self.client
+        resp1 = c.get(reverse('message-list', kwargs=dict(format='json')))
+        resp2 = c.get(reverse('message-detail', kwargs=dict(pk=1, format='json')))
+        with self.assertRaises(AssertionError):
+            self.assertJSONLenAndEqual(resp1, resp2)
+        with self.assertRaises(AssertionError):
+            self.assertHTTPCode(201, resp1)
+        resp3 = c.get('/@admin')
+        with self.assertRaises(ValueError):
+            self.assertJSONLenAndEqual(resp1, resp3)
+        with self.assertRaises(ValueError):
+            self.assertJSONLenAndEqual(resp3, resp1)
+
 
 
 class TestAPI_Messages(APITestCase_):
