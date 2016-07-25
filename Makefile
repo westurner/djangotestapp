@@ -15,5 +15,16 @@ serve:
 install:
 	pip install -r requirements/requirements-all.txt
 
+setupdev:
+	$(MAKE) migrate
+	python ./manage.py check
+	python ./manage.py createsuperuser --noinput --username=admin --email=admin@local.local
+	@# python ./manage.py changepassword admin
+	@# django-extensions
+	python ./manage.py set_fake_passwords
+	#python ./manage.py set_default_site --system-fqdn
+	#python ./manage.py generate_secret_key
+	#python ./manage.py collectstatic  # STATIC_ROOT
+
 migrate:
 	python ./manage.py migrate -v3
