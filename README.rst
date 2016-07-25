@@ -49,8 +49,8 @@ django-rest-framework-social-oauth2
 | Src: https://github.com/PhilipGarnero/django-rest-framework-social-oauth2
 | PyPI: https://pypi.python.org/pypi/django-rest-framework-social-oauth2
 
-- `<python-social-auth>`_
-- `<django-oauth-toolkit>`_
+- `python-social-auth`_
+- `django-oauth-toolkit`_
 
 python-social-auth
 ~~~~~~~~~~~~~~~~~~~~~~
