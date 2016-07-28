@@ -34,3 +34,25 @@ migrate:
 dumpdata:
 	python ./manage.py dumpdata --all \
 		| python -mjson.tool > djangotestapp/fixtures/dump.json
+
+elasticsearch-serve:
+	./bin/elasticsearch -Dpath.data="${_VAR}/es/data" -Dpath.logs="${_LOG}/es"	
+
+
+
+composeps:
+	docker-compose ps
+
+composeup:
+	docker-compose up -d
+	docker-compose ps
+
+composedown:
+	docker-compose down
+	docker-compose ps
+
+composebuild:
+	docker-compose build app
+
+composebuild-no-cache:
+	docker-compose build --no-cache app

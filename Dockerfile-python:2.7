@@ -1,0 +1,47 @@
+FROM python:2.7
+ENV PYTHONUNBUFFERED 1
+RUN apt-get update && apt-get install -y \
+  gcc \
+  gettext \
+  mysql-client libmysqlclient-dev \
+  postgresql-client libpq-dev \
+  sqlite3 \
+  make \
+  --no-install-recommends && rm -rf /var/lib/apt/lists/*
+
+RUN python -m pip install virtualenv
+
+ENV WHEELHOUSE=/wheelhouse
+ENV PIP_WHEEL_DIR=/wheelhouse
+ENV PIP_FIND_LINKS=/wheelhouse
+VOLUME /wheelhouse
+
+ENV PIP_DOWNLOAD_CACHE="/wheelhouse/.pip-cache"
+
+ARG _USER='app'
+ENV WORKON_HOME="/home/${_USER}"
+ENV VIRTUAL_ENV="${VIRTUAL_ENV}"
+ENV _WRD="${_WRD}"
+RUN useradd -U -m "${_USER}" && chown -R ${_USER}:${_USER} "${WORKON_HOME}"
+USER ${_USER}
+WORKDIR "${WORKON_HOME}"
+ENV DJANGO_VERSION 1.9.8
+RUN python -m virtualenv app \
+  && . app/bin/activate \
+  && python -m site
+RUN . app/bin/activate \
+  && python -m pip install mysqlclient django=="$DJANGO_VERSION"
+
+# VOLUME /application  # instead of /home/app/app/src/app (_WRD)
+# ADD . /application
+
+ADD . "${_WRD}"
+WORKDIR "${_WRD}"
+RUN . "${VIRTUAL_ENV}/bin/activate" \
+  && ls -al \
+  && chmod o+r "${_USER}" ./Makefile \
+  && make --trace install
+RUN . "${VIRTUAL_ENV}/bin/activate" && make setupdev
+
+EXPOSE 8000
+RUN . "${VIRTUAL_ENV}/bin/activate" && make serve
