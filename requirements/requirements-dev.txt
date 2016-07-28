@@ -1,11 +1,11 @@
 
 # appdev requirements
+
 django-debug-toolbar
-django-extensions
 Werkzeug
 
-requests
-requests-oauthlib
+#requests
+#requests-oauthlib
 #httpie
 #httpie-oauth # OAuth1
 curlish
