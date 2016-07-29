@@ -17,6 +17,7 @@ from django.conf.urls import include, url
 
 import djangotestapp.testapp.views as views
 import djangotestapp.testapp.api as api
+import djangotestapp.testapp.search_views as search_views
 
 urlpatterns = [
     url(r'^$', views.MessageListView.as_view(), {'title': 'testapp'}, name='message_list_view'),
@@ -27,6 +28,8 @@ urlpatterns = [
     url(r'^@(?P<username>[\w\d]+)', views.MessageUserListView.as_view(), name='message_user_list_view'),
     url(r'^tag/(?P<hashtag>[\w\d]+)', views.HashtagListView.as_view(), name='hashtag_list_view'),
     url(r'^@/(?P<username>[\w\d]+)/tag/(?P<hashtag>[\w\d]+)', views.MessageUserHashtagListView.as_view(), name='message_user_hashtag_list_view'),
+
+    url(r'^search_/', search_views.TestSearchView.as_view(), name='test_search'),
 
     url(r'^api/v1/', include(api.router.urls)),
 ]

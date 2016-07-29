@@ -35,6 +35,10 @@ dumpdata:
 	python ./manage.py dumpdata --all \
 		| python -mjson.tool > djangotestapp/fixtures/dump.json
 
+rebuild_index:
+	python ./manage.py rebuild_index --noinput
+
+
 elasticsearch-serve:
 	./bin/elasticsearch -Dpath.data="${_VAR}/es/data" -Dpath.logs="${_LOG}/es"	
 

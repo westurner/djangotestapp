@@ -37,6 +37,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    'haystack',
+    'haystack_panel',
+
     'debug_toolbar',
     'django_extensions',
     'djangotestapp.testapp',
@@ -152,3 +156,40 @@ AUTHENTICATION_BACKENDS = (
 
 # django-rest-framework-social-oauth2
 PROPRIETARY_BACKEND_NAME = "Django"
+
+
+# django-haystack
+SERVER_HOSTNAMES = {
+    'localhost': {
+        'elasticsearch_url': 'http://127.0.0.1:9300',
+    },
+    'docker': {
+        'elasticsearch_url': 'http://es:9200',
+    }
+}
+CURRENT_HOSTNAME = 'localhost'
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'haystack.backends.elasticsearch_backend.ElasticsearchSearchEngine',
+        'URL': SERVER_HOSTNAMES[CURRENT_HOSTNAME]['elasticsearch_url'],
+        'INDEX_NAME': 'haystack'
+    }
+}
+
+# django-debug-toolbar
+DEBUG_TOOLBAR_PANELS = [
+    'debug_toolbar.panels.versions.VersionsPanel',
+    'debug_toolbar.panels.timer.TimerPanel',
+    'debug_toolbar.panels.settings.SettingsPanel',
+    'debug_toolbar.panels.headers.HeadersPanel',
+    'debug_toolbar.panels.request.RequestPanel',
+    'debug_toolbar.panels.sql.SQLPanel',
+    'debug_toolbar.panels.staticfiles.StaticFilesPanel',
+    'debug_toolbar.panels.templates.TemplatesPanel',
+    'debug_toolbar.panels.cache.CachePanel',
+    'debug_toolbar.panels.signals.SignalsPanel',
+    'debug_toolbar.panels.logging.LoggingPanel',
+    'debug_toolbar.panels.redirects.RedirectsPanel',
+
+    'haystack_panel.panel.HaystackDebugPanel',
+]

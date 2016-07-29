@@ -1,0 +1,2 @@
+{{ object.articleBody }}
+{{ object.user.username }}
