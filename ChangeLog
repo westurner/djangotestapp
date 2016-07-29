@@ -1,0 +1,62 @@
+CHANGES
+=======
+
+* CLN: .gitignore
+
+0.0.1
+-----
+
+* ETC: settings.py: STATIC_ROOT=${_VAR}/www/static
+* DOC: README.rst: links
+* DOC: README.rst: add links to localhost:8000 /_admin_/
+* DOC: README.rst: Usage instructions
+* BLD: requirements-all.txt: remove cycle
+* REF,PRF: testapp/views.py: just reference self.request.user
+* CLN: testapp/tests.py: check test_new_notloggedin first
+* REF,TST: testapp/*: user TextField -> ForeignKey
+* CLN: testapp/api.py: comment unused __repr__ (99% coverage)
+* TST: testapp/tests.py: autopep8, rm extra imports
+* TST: testapp/tests.py: append to e.args on exception, TestAPITestCase_
+* ENH,TST: testapp/api.py, models.py, urls.py: REST views and tests for User, Hashtag, Message
+* DOC: settings.py: TEST_REQUEST_DEFAULT_FORMAT='json'
+* TST: djangotestapp/fixtures: data from dumpdata
+* BLD,CLN: Makefile: line wrapping
+* BLD: Makefile: test -> manage.py test -d
+* BUG: settings.py: use os.realpath for PROJECT_ROOT
+* BLD: Makefile: dumpdata > djangotestapp/fixtures/dump.json
+* CLN: testapp/admin.py: fields on separate lines
+* ENH: testapp/admin.py: set MessageAdmin.list_display_fields
+* REF,SEC: urls.py: move admin to _admin_
+* REF: urls.py, testapp/urls.py: move testapp urls to app
+* DOC: README.rst: ~/.ftcurlish.json example
+* BLD: Makefile: setupdev
+* DOC: README.rst: local links (these may not work on PyPI anymore)
+* DOC: README.rst: .. contents:: :depth: 10
+* DOC: README.rst: links, a bit of description
+* ENH,ETC,BLD: django-rest-framework, rest_framework_social_oauth2
+* BLD: Makefile: migrate -v2
+* TST: testapp/views.py: test djangotestapp.testapp.apps config
+* TST,DOC: tests.py, testapp/tests.py: test wsgi.py
+* DOC: testapp/utils.py: remove extra docstring (just return User objects)
+* BUG,SEC: testapp/views.py, tests.py: LoginRequiredMixin for /new, set Message.user from self.request.user.username
+* ENH,TST: views.py, tests.py, models.py: generic views (/me, /@user, /@user/pk, /tag/hashtag, /@user/tag/hashtag)
+* PRF,TST: testapp/models.py, testapp/tests.py: minimize hashtag ManyToMany SQL queries
+* BUG: testapp/utils.py: RGX_HASHTAG, RGX_USERTAG, RGX_TAGS r'\B(#|@)([\w\d]+)'
+* ENH,TST,REF: testapp/admin,models,tests,utils, requirements.txt: linkify_text, MessageAdmin, Message.hashtags, Message.users
+* TST,CLN: testapp/tests.py: remove uncoverable expression
+* BLD: Makefile, requirements/*
+* ENH,TST,REF: MessageListView (/), MessageAdmin, tests, utils.linkify_articleBody, message_list.html
+* ETC,UBY: settings.py, templates/base.html: add ./templates to TEMPLATES[DIRS], bootstrap 4 base.html
+* TST: testapp/tests.py: reverse(view_name), test_root_view
+* CLN: testapp/tests.py: pyflakes W0612
+* CLN: .gitignore: add db.sqlite3
+* SCH: testapp/models.py, tests.py: Message.message -> articleBody, Message.starCount -> likeCount (schema.org-ification)
+* TST: testapp/tests.py: test_Message_0 (save, get, delete, get)
+* DOC: testapp/models.py: settings.AUTH_USER_MODEL because custom User models
+* ENH,TST: models.py, tests.py, migrations/0001_initial.py: create Message model, manage.py makemigrations, manage.py migrate
+* ETC: settings.py: add 'djangotestapp.testapp' to INSTALLED_APPS'
+* BLD,ENH: testapp/, urls.py, testapp/views.py, testapp/tests.py: `django-admin startapp testapp`, HttpResponse, testClient
+* BLD: settings.py: add 'django_extensions' to INSTALLED_APPS'
+* BLD: settings.py: add 'debug_toolbar' to INSTALLED_APPS'
+* CLN: .gitignore:
+* BLD: `django startproject djangotestapp`
