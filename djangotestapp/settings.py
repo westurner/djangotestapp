@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'haystack',
+    'haystackbrowser',
     'haystack_panel',
 
     'debug_toolbar',

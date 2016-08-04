@@ -13,4 +13,4 @@ django-haystack
 drf-haystack
 celery<4.0.0
 celery-haystack
-
+django-haystackbrowser
