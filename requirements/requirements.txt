@@ -14,3 +14,7 @@ drf-haystack
 celery<4.0.0
 celery-haystack
 django-haystackbrowser
+
+fake-factory
+factory_boy
+django-factory_boy
