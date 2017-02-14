@@ -40,7 +40,7 @@ def tag_replfunc(mobj, hashtags=None, usertags=None, users_by_name=None):
         hashtag = mobj.groups()[1]
         hashtags.append(hashtag.lower())
         return u'''<a class='hashtag' href='/tag/{0}'>#{1}</a>'''.format(
-            urllib.quote(hashtag),
+            urllib.quote_plus(hashtag),
             cgi.escape(hashtag))
     elif prefixChar == '@':
         username = mobj.groups()[1]
